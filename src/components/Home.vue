@@ -44,6 +44,19 @@
         <v-floor :floorData="floor1" :floorTitle='floorName.floor1'></v-floor>
         <v-floor :floorData="floor2" :floorTitle='floorName.floor2'></v-floor>
         <v-floor :floorData="floor3" :floorTitle='floorName.floor3'></v-floor>
+        <!--Hot Area-->
+        <div class="hot-area">
+            <div class="hot-title">热卖商品</div>
+            <div class="hot-goods">
+                 <van-list>
+                    <van-row gutter="0">
+                        <van-col span="12" v-for="( item, index) in hotGoods" :key="index">
+                             <goods-info :goodsImage="item.image" :goodsName="item.name" :goodsPrice="item.price"></goods-info>
+                        </van-col>
+                    </van-row>
+                </van-list>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -51,6 +64,8 @@
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
 import Floor from './base/Floor.vue'
+import goodsInfo from './base/goodsInfoComponent'
+import url from '../serviceAPI.config.js'
 export default {
     name: 'Home',
     data() {
@@ -67,8 +82,11 @@ export default {
             floor2: [],
             floor3: [],
             floorName: {},
+            hotGoods: [],
             swiperOption: {
-                autoplay: true,
+                autoplay: {
+                    disableOnInteraction: false,
+                },
                 loop: true,
                 pagination:{
                     el:'.swiper-pagination'
@@ -82,7 +100,7 @@ export default {
     created() {
         this.$http({
             method: 'get',
-            url: 'https://www.easy-mock.com/mock/5e913e7e693a06449f12c6b6/index/index'
+            url: url.getIndexInfo
         }).then(res => {
             this.category = res.data.data.category;
             this.recommendGoods = res.data.data.recommend
@@ -90,6 +108,7 @@ export default {
             this.floor2 = res.data.data.floor2             //楼层1数据
             this.floor3 = res.data.data.floor3              //楼层1数据
             this.floorName = res.data.data.floorName
+            this.hotGoods = res.data.data.hotGoods           //热卖商品
         }).catch(error => {
 
         })
@@ -97,7 +116,8 @@ export default {
     components: {
         Swiper,
         SwiperSlide,
-        'v-floor': Floor
+        'v-floor': Floor,
+        goodsInfo
     },
 }
 </script>
@@ -129,14 +149,12 @@ export default {
     overflow: hidden;
     img {
         width: 100%;
-        height: auto;
-        max-width: 100%;
-        max-height: 100%;
+        height: 10rem;
     }
 }
 .type-bar{
     background-color: #fff;
-    margin:0 .3rem .3rem .3rem;
+    margin: 1rem 0.3rem;
     border-radius: .3rem;
     font-size:14px;
     display: flex;
@@ -155,8 +173,9 @@ export default {
 .recommend-title{
     border-bottom:1px solid #eee;
     font-size:14px;
-    padding:.2rem;
+    padding:.3rem 0;
     color:#e5017d;
+    background-color: #eee;
 }
 .recommend-body{
     border-bottom: 1px solid #eee;
@@ -168,5 +187,13 @@ export default {
     font-size: 12px;
     text-align: center;
 }
-
+.hot-area{
+    text-align: center;
+    font-size:14px;
+    height: 1.8rem;
+    line-height:1.8rem;
+}
+.hot-title {
+    background-color: #eee;
+}
 </style>
