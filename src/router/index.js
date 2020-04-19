@@ -6,14 +6,8 @@ import Home from '../components/Home.vue'
 Vue.use(VueRouter)
 
 const routes = [
-    {
-        path: '/',
-        redirect: '/home'
-    },
-    {
-        path: '/home',
-        component: Home,
-    },
+    {path: '/',redirect: '/home'},
+    {path: '/home',name: 'home',component: Home,}
 ]
 
 let router = new VueRouter({
